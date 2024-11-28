@@ -66,6 +66,8 @@
               "main",
               "switchboard",
               "other",
+              "reserved",
+              "unused",
               "unknown"
             ]
           }
