@@ -1,0 +1,50 @@
+{
+    "$schema": "https://kusaremkn.github.io/mantela/mantela.schema.json",
+    "version": "0.0.0",
+    "aboutMe": {
+        "identifier": "b0ce607e-a8be-470b-9506-2f9aae1ea317",
+        "name": "Example Mantela JSON",
+        "preferredPrefix": "0510"
+    },
+    "extensions": [
+        {
+            "extension": "7679",
+            "name": "iyokan",
+            "type": "phone"
+        },
+        {
+            "extension": "5175",
+            "name": "ivory",
+            "type": "phone"
+        },
+        {
+            "extension": "5431",
+            "name": "shion",
+            "type": "fax"
+        },
+        {
+            "extension": "3241",
+            "name": "mikan",
+            "type": "phone"
+        },
+        {
+            "extension": "9999",
+            "name": "代表番号",
+            "type": "main"
+        }
+    ],
+    "providers": [
+        {
+            "identifier": "01921813B22461A5DFB84175F093A84B",
+            "mantela": "https://hatsune.example.com/.well-known/mantela.json",
+            "name": "Hatsune Mike",
+            "prefix": "0039"
+        },
+        {
+            "identifier": "01JDR6KSCD81EV82QN46HGQNBA",
+            "mantela": "https://closure.example.com/mantela.json",
+            "name": "Bag Closure Telephone",
+            "prefix": "0108"
+        }
+    ]
+}
