@@ -4,7 +4,7 @@
 
 ## ドキュメント
 
-- [Mantela.json について](https://github.com/KusaReMKN/mantela/blob/main/MANTELA.md)
+- [mantela.json について](https://github.com/KusaReMKN/mantela/blob/main/MANTELA.md)
 
 ## ツール群
 
