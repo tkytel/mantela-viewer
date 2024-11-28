@@ -19,7 +19,10 @@
         },
         "preferredPrefix": {
           "description": "交換局の好ましいプレフィクス番号を指定してください",
-          "type": "string"
+          "type": [ "string", "array" ],
+          "items": {
+            "type": "string"
+          }
         },
         "identifier": {
           "description": "交換局の識別子を機械の読める形式で指定してください",
