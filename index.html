@@ -7,12 +7,22 @@
 <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js" defer></script>
 <script src="./mantela.js" defer></script>
 <style>
+body {
+	height: 100vh;
+	box-sizing: border-box;
+	padding: 8px;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+}
 .mandala-container {
+	flex-grow: 1;
 	align-content: center;
+	overflow: hidden;
 }
 .mandala {
-	aspect-ratio: 4/3;
-	max-height: 50vh;
+	width: 100%;
+	height: 100%;
 }
 </style>
 </head>
