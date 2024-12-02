@@ -15,9 +15,6 @@ main(first)
         try {
             const cur = queue.shift();
             const k = await (await fetch(cur, { mode: 'cors' })).json();
-            if (visited.some(e => e === cur))
-                continue;
-            visited.push(cur);
 
             const me = {
                 id: k.aboutMe.identifier,
@@ -26,6 +23,11 @@ main(first)
             if (!nodes.some(q => q.id === me.id)) {
                 nodes.push(me);
             }
+
+            if (visited.some(e => e === me.id))
+                continue;
+            visited.push(me.id);
+
 
             k.extensions.forEach(e => {
                 const node = {
