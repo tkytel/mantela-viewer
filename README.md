@@ -8,4 +8,4 @@
 
 ## ツール群
 
-- [Mantela Viewer](https://kusaremkn.github.io/mantela/)
+- [Mantela Viewer](https://kusaremkn.github.io/mantela-viewer/)
