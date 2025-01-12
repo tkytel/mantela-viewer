@@ -1,0 +1,17 @@
+.fill-inline {
+	box-sizing: border-box;
+	width: 100%;
+}
+.container {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+.mantela {
+	flex-grow: 1;
+	overflow: hidden;
+	width: 100vw;
+	margin: auto;
+	position: relative;
+	background-color: rgba(64, 64, 64, 0.1);
+}
