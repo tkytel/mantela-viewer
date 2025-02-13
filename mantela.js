@@ -217,6 +217,36 @@ graph2vis(container, graph)
 }
 
 /*
+ * ノードの情報を表示する
+ */
+const showNodeInfo = node => new Promise(r => {
+	const dialog = document.createElement('dialog');
+	dialog.addEventListener('close', _ => {
+		dialog.parentNode.removeChild(dialog);
+		r(dialog.returnValue);
+	});
+	document.body.append(dialog);
+
+	const button = document.createElement('button');
+	button.textContent = 'OK';
+	button.addEventListener('click', _ => dialog.close(true));
+	const div = document.createElement('div');
+	div.style.textAlign = 'end';
+	div.append(button);
+
+	const code = document.createElement('code');
+	code.textContent = JSON.stringify(node, null, 4);
+	const pre = document.createElement('pre');
+	pre.style.maxWidth = '80vw';
+	pre.style.maxHeight = '80vh';
+	pre.overflow = 'scroll';
+	pre.append(code);
+
+	dialog.append(pre, div);
+	dialog.showModal();
+});
+
+/*
  * フォーム送信時のイベントハンドラ
  * mantela.json を取得し、接続情報を解析し、表示する。
  */
@@ -225,7 +255,13 @@ formMantela.addEventListener('submit', async e => {
 	btnGenerate.disabled = true;
 	const limit = checkNest.checked ? +numNest.value : Infinity;
 	const graph = await generageGraph(urlMantela.value, limit, outputStatus);
-	graph2vis(divMantela, graph);
+	const network = graph2vis(divMantela, graph);
+	network.on('doubleClick', async e => {
+		if (e.nodes.length > 0) {
+			const node = graph.nodes.find(v => v.id === e.nodes[0]);
+			await showNodeInfo(node);
+		}
+	});
 	secMandala.scrollIntoView({
 		behavior: 'smooth',
 		block: 'start',
