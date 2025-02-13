@@ -92,7 +92,7 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 			const me = nodes.get(aboutMe.identifier);
 			/* 既に知られている局の場合、呼び名を追加 */
 			if (me)
-				me.names.push(aboutMe.name);
+				me.names = [ ...new Set([ ...me.names, aboutMe.name ]) ];
 			else
 				nodes.set(aboutMe.identifier, {
 					id: aboutMe.identifier,
@@ -116,9 +116,10 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 				const nodeId = `${curNode.id}-${crypto.randomUUID()}`;
 				/* 内線追加 */
 				nodes.set(nodeId, {
+					...e,
 					id: nodeId,
 					names: [ e.name ],
-					type: e.type,
+					name: `${curNode.names[0]}.${e.name}`,
 				});
 				/* 番号追加 */
 				edges.push({
@@ -134,7 +135,7 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 				const node = nodes.get(e.identifier);
 				/* 既に知られている局の場合、呼び名を追加 */
 				if (node)
-					node.names.push(e.name);
+					node.names = [ ...new Set([ ...node.names, e.name ]) ];
 				else
 					nodes.set(e.identifier, {
 						id: e.identifier,
