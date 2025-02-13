@@ -177,10 +177,29 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 function
 graph2vis(container, graph)
 {
+	const icontab = {
+		'PBX': '\uf0ac',
+		'phone': '\uf095',
+		'fax': '\uf1ac',
+		'modem': '\uf233',
+		'main': '\uf074',
+		'switchboard': '\uf074',
+		'other': '\uf059',
+		'reserved': '\uf04d',
+		'unused': '\uf00d',
+		'unknown': '\uf007',
+	};
 	const nodes = graph.nodes.map(e => ({
 		id: e.id,
 		label: e.names[0],
 		color: e.type !== 'PBX' && 'orange',
+		shape: e.type === 'PBX' ? 'circle' : 'icon',
+		icon: {
+			face: 'FontAwesome',
+			code: icontab[e.type] || icontab['unknown'],
+			color: 'black',
+			size: 24,
+		},
 	}));
 	const edges = graph.edges;
 
