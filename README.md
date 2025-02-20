@@ -1,11 +1,11 @@
-# Mantela &ndash; Telephone Network Mandala
+# Mantela Viewer &ndash; Telephone Network Mandala Viewer
 
-**Mantela** は SIP 電話網を構成する自分と他の電話局とのつながりを表現することのできるスキームです。
+**Mantela Viewer** は、**[Mantela](https://github.com/KusaReMKN/mantela)** 記述された電話局同士のつながりを可視化します。
 
-## ドキュメント
+## URL パラメータについて
 
-- [mantela.json について](https://github.com/KusaReMKN/mantela/blob/main/MANTELA.md)
-
-## ツール群
-
-- [Mantela Viewer](https://kusaremkn.github.io/mantela-viewer/)
+`first` の値として、電話網の起点となる mantela.json の URL を指定できます。
+例えば、
+`https://kusaremkn.github.io/mantela-viewer/?first=https://example.com/.well-known/mantela.json`
+のようにすると、
+自動的に `https://example.com/.well-known/mantela.json` を起点とした電話網を表示します。
