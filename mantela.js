@@ -113,14 +113,19 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 		/* 内線番号を登録する */
 		if ('extensions' in mantela)
 			mantela.extensions.forEach((e, i) => {
-				const nodeId = `${curNode.id}-${crypto.randomUUID()}`;
-				/* 内線追加 */
-				nodes.set(nodeId, {
-					...e,
-					id: nodeId,
-					names: [ e.name ],
-					name: `${curNode.names[0]}.${e.name}`,
-				});
+				const nodeId = `${curNode.id}-`
+						+ `${e.identifier || crypto.randomUUID()}`;
+				const node = nodes.get(nodeId);
+				/* 既に知らている内線の場合、呼び名を追加 */
+				if (node)
+					node.names = [ ...new Set([ ...node.names, e.name ]) ];
+				else
+					nodes.set(nodeId, {
+						...e,
+						id: nodeId,
+						names: [ e.name ],
+						name: `${curNode.names[0]}.${e.name}`,
+					});
 				/* 番号追加 */
 				edges.push({
 					from: curNode.id,
