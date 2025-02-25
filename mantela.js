@@ -217,6 +217,9 @@ graph2vis(container, graph)
 		edges: {
 			arrows: 'to',
 		},
+		physics: {
+			solver: 'forceAtlas2Based',
+		},
 	};
 
 	return new vis.Network(container, data, options);
