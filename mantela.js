@@ -113,7 +113,7 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 		/* 内線番号を登録する */
 		if ('extensions' in mantela)
 			mantela.extensions.forEach((e, i) => {
-				const nodeId = `${curNode.id}-`
+				const nodeId = `${curNode.id} `
 						+ `${e.identifier || crypto.randomUUID()}`;
 				const node = nodes.get(nodeId);
 				/* 既に知らている内線の場合、呼び名を追加 */
@@ -124,7 +124,7 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 						...e,
 						id: nodeId,
 						names: [ e.name ],
-						name: `${curNode.names[0]}.${e.name}`,
+						name: `${curNode.names[0]} ${e.name}`,
 					});
 				/* 番号追加 */
 				edges.push({
@@ -132,6 +132,16 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 					to: nodeId,
 					label: e.extension,
 				});
+				if (e.transferTo) {
+					e.transferTo.forEach(k => {
+						const toId = !!~k.indexOf(' ')
+								? k : `${curNode.id} ${k}`;
+						edges.push({
+							from: nodeId,
+							to: toId,
+						});
+					});
+				}
 			});
 
 		/* 接続局を登録する（接続数を考慮する） */
