@@ -193,29 +193,31 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 function
 graph2vis(container, graph)
 {
-	const icontab = {
-		'PBX': '\uf0ac',
-		'phone': '\uf095',
-		'fax': '\uf1ac',
-		'modem': '\uf233',
-		'main': '\uf074',
-		'switchboard': '\uf074',
-		'other': '\uf059',
-		'reserved': '\uf04d',
-		'unused': '\uf00d',
-		'unknown': '\uf007',
+	const imgtab = {
+		alias: './img/alias.svg',
+		application: './img/application.svg',
+		cellphone: './img/cellphone.svg',
+		dialphone: './img/dialphone.svg',
+		fax: './img/fax.svg',
+		information: './img/information.svg',
+		main: './img/main.svg',
+		modem: './img/modem.svg',
+		music: './img/music.svg',
+		other: './img/other.svg',
+		phone: './img/phone.svg',
+		pushphone: './img/pushphone.svg',
+		reserved: './img/reserved.svg',
+		smartphone: './img/smartphone.svg',
+		switchboard: './img/switchboard.svg',
+		unknown: './img/unknown.svg',
+		unused: './img/unused.svg',
 	};
 	const nodes = graph.nodes.map(e => ({
 		id: e.id,
 		label: e.names[0],
 		color: e.type !== 'PBX' && 'orange',
-		shape: e.type === 'PBX' ? 'circle' : 'icon',
-		icon: {
-			face: 'FontAwesome',
-			code: icontab[e.type] || icontab['unknown'],
-			color: 'black',
-			size: 24,
-		},
+		shape: e.type === 'PBX' ? 'circle' : 'image',
+		image: imgtab[e.type] || imgtab['unknown'],
 	}));
 	const edges = graph.edges;
 

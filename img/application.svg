@@ -1,0 +1,18 @@
+<!--?xml version="1.0" encoding="utf-8"?-->
+<!-- Generator: Adobe Illustrator 18.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#4B4B4B;}
+</style>
+<g>
+	<path class="st0" d="M464,32H48C21.492,32,0,53.493,0,80v352c0,26.508,21.492,48,48,48h416c26.508,0,48-21.492,48-48V80
+		C512,53.493,490.508,32,464,32z M444.664,67c10.492,0,19,8.508,19,19c0,10.493-8.508,19-19,19s-19-8.507-19-19
+		C425.664,75.508,434.172,67,444.664,67z M374.164,67c10.492,0,19,8.508,19,19c0,10.493-8.508,19-19,19s-19-8.507-19-19
+		C355.164,75.508,363.672,67,374.164,67z M303.664,67c10.492,0,19,8.508,19,19c0,10.493-8.508,19-19,19s-19-8.507-19-19
+		C284.664,75.508,293.172,67,303.664,67z M472,432c0,4.406-3.586,8-8,8H48c-4.414,0-8-3.594-8-8V136h432V432z" style="fill: rgb(0, 0, 0);"></path>
+	<rect x="112" y="208" class="st0" width="288" height="32" style="fill: rgb(0, 0, 0);"></rect>
+	<rect x="112" y="272" class="st0" width="288" height="32" style="fill: rgb(0, 0, 0);"></rect>
+	<rect x="112" y="336" class="st0" width="152" height="32" style="fill: rgb(0, 0, 0);"></rect>
+</g>
+</svg>
