@@ -162,6 +162,7 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 					from: curNode.id,
 					to: e.identifier,
 					label: e.prefix,
+					color: 'pink',
 				});
 				/* キュー追加 */
 				if (e.mantela)
