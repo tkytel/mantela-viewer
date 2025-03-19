@@ -91,15 +91,17 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 			const aboutMe = mantela.aboutMe;
 			const me = nodes.get(aboutMe.identifier);
 			/* 既に知られている局の場合、呼び名を追加 */
-			if (me)
+			if (me) {
 				me.names = [ ...new Set([ ...me.names, aboutMe.name ]) ];
-			else
+				Object.assign(me, aboutMe);
+			} else {
 				nodes.set(aboutMe.identifier, {
 					...aboutMe,
 					id: aboutMe.identifier,
 					names: [ aboutMe.name ],
 					type: 'PBX',
 				});
+			}
 		} else {
 			/* 自分の情報すら名乗れない局の情報は登録できない */
 			continue;
