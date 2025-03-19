@@ -119,18 +119,22 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 				const nodeId = `${curNode.id} `
 						+ `${e.identifier || crypto.randomUUID()}`;
 				const node = nodes.get(nodeId);
+				const unavailable = curNode.unavailable || undefined;
 				/* 既に知らている内線の場合、呼び名を追加 */
 				if (node)
 					node.names = [ ...new Set([ ...node.names, e.name ]) ];
-				else
+				else {
 					nodes.set(nodeId, {
 						...e,
+						unavailable,
 						id: nodeId,
 						names: [ e.name ],
 						name: `${curNode.names[0]} ${e.name}`,
 					});
+				}
 				/* 番号追加 */
 				edges.push({
+					unavailable,
 					from: curNode.id,
 					to: nodeId,
 					label: e.extension,
@@ -140,6 +144,7 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 						const toId = !!~k.indexOf(' ')
 								? k : `${curNode.id} ${k}`;
 						edges.push({
+							unavailable,
 							from: nodeId,
 							to: toId,
 						});
@@ -222,8 +227,20 @@ graph2vis(container, graph)
 		color: e.type !== 'PBX' && 'orange',
 		shape: e.type === 'PBX' ? 'circle' : 'image',
 		image: imgtab[e.type] || imgtab['unknown'],
+		opacity: e.unavailable ? 0.3 : 1,
 	}));
-	const edges = graph.edges;
+	const edges = graph.edges.map(e => {
+		// FIXME: find() のせいでかなり遅くなる
+		const from = graph.nodes.find(v => v.id === e.from);
+		const to = graph.nodes.find(v => v.id === e.to);
+		const unavailable = e.unavailable || from?.unavailable || to?.unavailable;
+		return {
+			...e,
+			color: {
+				opacity: unavailable ? 0.3: 1,
+			},
+		};
+	});
 
 	const data = {
 		nodes,
