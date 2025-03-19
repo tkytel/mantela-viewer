@@ -95,6 +95,7 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 				me.names = [ ...new Set([ ...me.names, aboutMe.name ]) ];
 			else
 				nodes.set(aboutMe.identifier, {
+					...aboutMe,
 					id: aboutMe.identifier,
 					names: [ aboutMe.name ],
 					type: 'PBX',
@@ -153,6 +154,7 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 					node.names = [ ...new Set([ ...node.names, e.name ]) ];
 				else
 					nodes.set(e.identifier, {
+						...e,
 						id: e.identifier,
 						names: [ e.name ],
 						type: 'PBX',
