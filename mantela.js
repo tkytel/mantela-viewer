@@ -131,6 +131,7 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 					from: curNode.id,
 					to: nodeId,
 					label: e.extension,
+					color: '#E87A90',
 				});
 				if (e.transferTo) {
 					e.transferTo.forEach(k => {
@@ -162,7 +163,6 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 					from: curNode.id,
 					to: e.identifier,
 					label: e.prefix,
-					color: 'pink',
 				});
 				/* キュー追加 */
 				if (e.mantela)
