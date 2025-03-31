@@ -138,6 +138,7 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 					from: curNode.id,
 					to: nodeId,
 					label: e.extension,
+					color: '#E87A90',
 				});
 				if (e.transferTo) {
 					e.transferTo.forEach(k => {
