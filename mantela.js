@@ -238,6 +238,7 @@ graph2vis(container, graph)
 		return {
 			...e,
 			color: {
+				color: e.color,
 				opacity: unavailable ? 0.3: 1,
 			},
 		};
