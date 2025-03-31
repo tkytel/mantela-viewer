@@ -120,7 +120,7 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 						+ `${e.identifier || crypto.randomUUID()}`;
 				const node = nodes.get(nodeId);
 				const unavailable = curNode.unavailable || undefined;
-				/* 既に知らている内線の場合、呼び名を追加 */
+				/* 既に知られている内線の場合、呼び名を追加 */
 				if (node)
 					node.names = [ ...new Set([ ...node.names, e.name ]) ];
 				else {
