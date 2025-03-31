@@ -32,6 +32,10 @@
 async function
 generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 {
+
+	/* 実行時間を計測するために、開始タイムスタンプを保持する */
+	const executeStartedTime = performance.now();
+
 	/**
 	 * ステータスの更新（指定されていれば）
 	 * @param { string } mesg - 表示するメッセージ
@@ -191,7 +195,12 @@ generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 		edges: edges,
 	};
 
-	updateStatus('Done.');
+	/* 実行時間を計算し、ステータスに結果を反映する */
+	const executeCompletedTime = performance.now();
+	const executeLength = executeCompletedTime - executeStartedTime;
+
+	updateStatus(`Done. Execution Time: ${executeLength} [ms]`);
+
 	return graph;
 }
 
