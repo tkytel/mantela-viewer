@@ -30,7 +30,7 @@
  * @param { HTMLElement } elemStat - ステータス表示用の HTML 要素
  */
 async function
-generageGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
+generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 {
 
 	/* 実行時間を計測するために、開始タイムスタンプを保持する */
@@ -306,7 +306,7 @@ formMantela.addEventListener('submit', async e => {
 	e.preventDefault();
 	btnGenerate.disabled = true;
 	const limit = checkNest.checked ? +numNest.value : Infinity;
-	const graph = await generageGraph(urlMantela.value, limit, outputStatus);
+	const graph = await generateGraph(urlMantela.value, limit, outputStatus);
 	const network = graph2vis(divMantela, graph);
 	network.on('doubleClick', async e => {
 		if (e.nodes.length > 0) {
