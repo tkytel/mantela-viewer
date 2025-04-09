@@ -30,7 +30,7 @@
  * @param { HTMLElement } elemStat - ステータス表示用の HTML 要素
  */
 async function
-generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
+generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined, elemStatistic = undefined)
 {
 
 	/* 実行時間を計測するために、開始タイムスタンプを保持する */
@@ -43,6 +43,28 @@ generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 	function updateStatus(mesg) {
 		if (elemStat && 'textContent' in elemStat)
 			elemStat.textContent = mesg;
+	}
+
+	/**
+	 * 統計情報の更新（指定されていれば）
+	 * @param { object }
+	 */
+	function updateStatistics(s) {
+		if (!elemStatistic)
+			return;
+
+		const liMantela = document.createElement('li');
+		liMantela.textContent = `Number of Mantelas: ${s.mantelas}`;
+		const liPbx = document.createElement('li');
+		liPbx.textContent = `Number of PBXs: ${s.pbxs}`;
+		const liTerminals = document.createElement('li');
+		liTerminals.textContent = `Number of terminals: ${s.terminals}`;
+		const ul = document.createElement('ul');
+		ul.append(liMantela, liPbx, liTerminals);
+
+		const clone = elemStatistic.cloneNode(false);
+		elemStatistic.parentElement.replaceChild(clone, elemStatistic);
+		clone.append(ul);
 	}
 
 	/**
@@ -70,6 +92,15 @@ generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 	 * @var { Set<string> }
 	 */
 	const visited = new Set();
+
+	/**
+	 * 統計情報
+	 */
+	const statistics = {
+		mantelas: 0,
+		pbxs: 0,
+		terminals: 0,
+	};
 
 	while (queue.length > 0) {
 		const current = queue.shift();
@@ -105,6 +136,7 @@ generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 					names: [ aboutMe.name ],
 					type: 'PBX',
 				});
+				statistics.pbxs++;
 			}
 		} else {
 			/* 自分の情報すら名乗れない局の情報は登録できない */
@@ -116,6 +148,7 @@ generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 		if (visited.has(curNode.id))
 			continue;
 		visited.add(curNode.id);
+		statistics.mantelas++;
 
 		/* 内線番号を登録する */
 		if ('extensions' in mantela)
@@ -135,6 +168,7 @@ generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 						names: [ e.name ],
 						name: `${curNode.names[0]} ${e.name}`,
 					});
+					statistics.terminals++;
 				}
 				/* 番号追加 */
 				edges.push({
@@ -162,15 +196,17 @@ generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 			mantela.providers.forEach(e => {
 				const node = nodes.get(e.identifier);
 				/* 既に知られている局の場合、呼び名を追加 */
-				if (node)
+				if (node) {
 					node.names = [ ...new Set([ ...node.names, e.name ]) ];
-				else
+				} else {
 					nodes.set(e.identifier, {
 						...e,
 						id: e.identifier,
 						names: [ e.name ],
 						type: 'PBX',
 					});
+					statistics.pbxs++;
+				}
 				/* 番号追加 */
 				edges.push({
 					from: curNode.id,
@@ -199,6 +235,9 @@ generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined)
 	const executeCompletedTime = performance.now();
 	const executeLength = executeCompletedTime - executeStartedTime;
 	updateStatus(`Done.  Execution Time: ${executeLength} ms`);
+
+	/* 統計情報を表示する */
+	updateStatistics(statistics);
 
 	return graph;
 }
@@ -306,7 +345,7 @@ formMantela.addEventListener('submit', async e => {
 	e.preventDefault();
 	btnGenerate.disabled = true;
 	const limit = checkNest.checked ? +numNest.value : Infinity;
-	const graph = await generateGraph(urlMantela.value, limit, outputStatus);
+	const graph = await generateGraph(urlMantela.value, limit, outputStatus, divStatistic);
 	const network = graph2vis(divMantela, graph);
 	network.on('doubleClick', async e => {
 		if (e.nodes.length > 0) {
