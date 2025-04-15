@@ -299,6 +299,9 @@ graph2vis(container, graph)
 		edges: {
 			arrows: 'to',
 		},
+		layout: {
+			improvedLayout: false,
+		},
 		physics: {
 			solver: 'forceAtlas2Based',
 		},
