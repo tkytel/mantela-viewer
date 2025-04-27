@@ -199,8 +199,11 @@ generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined, elemStatis
 				if (node) {
 					node.names = [ ...new Set([ ...node.names, e.name ]) ];
 				} else {
+					/* 接続の unavailable をコピーしたくないため */
+					const v = JSON.parse(JSON.stringify(e));
+					delete v.unavailable;
 					nodes.set(e.identifier, {
-						...e,
+						...v,
 						id: e.identifier,
 						names: [ e.name ],
 						type: 'PBX',
@@ -212,6 +215,7 @@ generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined, elemStatis
 					from: curNode.id,
 					to: e.identifier,
 					label: e.prefix,
+					unavailable: e.unavailable,
 				});
 				/* キュー追加 */
 				if (e.mantela)
