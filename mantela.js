@@ -258,6 +258,7 @@ graph2vis(container, graph)
 		alias: './img/alias.svg',
 		application: './img/application.svg',
 		cellphone: './img/cellphone.svg',
+		conference: './img/conference.svg',
 		dialphone: './img/dialphone.svg',
 		fax: './img/fax.svg',
 		information: './img/information.svg',
