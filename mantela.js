@@ -23,28 +23,12 @@
  * @property { Edge[] } edges - Edge の列
  */
 
+
 /**
- * mantela.json からグラフを生成する
- * @param { string } firstMantela - 起点の mantela.json の URL
- * @param { number } maxNest - 探索する交換局のホップ数
- * @param { HTMLElement } elemStat - ステータス表示用の HTML 要素
  */
-async function
-generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined, elemStatistic = undefined)
+function
+mantelas2Graph(mantelas, maxNest = Infinity, elemStatistic = undefined)
 {
-
-	/* 実行時間を計測するために、開始タイムスタンプを保持する */
-	const executeStartedTime = performance.now();
-
-	/**
-	 * ステータスの更新（指定されていれば）
-	 * @param { string } mesg - 表示するメッセージ
-	 */
-	function updateStatus(mesg) {
-		if (elemStat && 'textContent' in elemStat)
-			elemStat.textContent = mesg;
-	}
-
 	/**
 	 * 統計情報の更新（指定されていれば）
 	 * @param { object }
@@ -54,7 +38,7 @@ generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined, elemStatis
 			return;
 
 		const liMantela = document.createElement('li');
-		liMantela.textContent = `Number of Mantelas: ${s.mantelas}`;
+		liMantela.textContent = `Number of Mantelas: ${mantelas.size}`;
 		const liPbx = document.createElement('li');
 		liPbx.textContent = `Number of PBXs: ${s.pbxs}`;
 		const liTerminals = document.createElement('li');
@@ -80,150 +64,106 @@ generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined, elemStatis
 	const edges = [];
 
 	/**
-	 * 探索キュー
-	 * @var { object[] }
-	 * @property { string } url - mantela.json の URL
-	 * @property { number } nest - 階層の深さ
-	 */
-	const queue = [ { url: firstMantela, nest: 0 } ];
-
-	/**
-	 * 訪問済 URL, ID
-	 * @var { Set<string> }
-	 */
-	const visited = new Set();
-
-	/**
 	 * 統計情報
 	 */
 	const statistics = {
-		mantelas: 0,
 		pbxs: 0,
 		terminals: 0,
 	};
 
-	while (queue.length > 0) {
-		const current = queue.shift();
+	for (const e of mantelas.values()) {
+		/* 深すぎたら相手にしない */
+		if (e.depth > maxNest)
+			break;
 
-		/* 訪問済 URL や最大深さより深過ぎる場合は辿らない */
-		if (visited.has(current.url) || current.nest > maxNest)
-			continue;
-
-		/* mantela.json を取得する */
-		updateStatus(current.url);
-		const mantela = await fetch(current.url, { mode: 'cors' })
-				.then(res => res.json())
-				.catch(err => new Error(err));
-		if (mantela instanceof Error) {
-			console.error(mantela, current.url);
-			updateStatus(mantela + current.url);
-			continue;
-		}
-		visited.add(current.url);
+		/* mantela.json は取得済である */
+		const mantela = e.mantela;
 
 		/* 自分の情報を登録する */
-		if ('aboutMe' in mantela) {
-			const aboutMe = mantela.aboutMe;
-			const me = nodes.get(aboutMe.identifier);
+		const me = nodes.get(mantela.aboutMe.identifier);
+		if (me) {
+			me.names = [ ...new Set([ ...me.names, mantela.aboutMe.name ]) ];
+			Object.assign(me, mantela.aboutMe);
+		} else {
+			nodes.set(mantela.aboutMe.identifier, {
+				...mantela.aboutMe,
+				id: mantela.aboutMe.identifier,
+				names: [ mantela.aboutMe.name ],
+				type: 'PBX',
+			});
+			statistics.pbxs++;
+		}
+
+		/* 内線番号の登録 */
+		const curNode = nodes.get(mantela.aboutMe.identifier);
+		mantela.extensions.forEach((e, i) => {
+			const nodeId = `${curNode.id} `
+				+ `${e.identifier || crypto.randomUUID()}`;
+			const node = nodes.get(nodeId);
+			const unavailable = curNode.unavailable || undefined;
+			/* 既に知られている内線の場合、呼び名を追加 */
+			if (node)
+				node.names = [ ...new Set([ ...node.names, e.name ]) ];
+			else {
+				nodes.set(nodeId, {
+					...e,
+					unavailable,
+					id: nodeId,
+					names: [ e.name ],
+					name: `${curNode.names[0]} ${e.name}`,
+				});
+				statistics.terminals++;
+			}
+			/* 番号追加 */
+			edges.push({
+				unavailable,
+				from: curNode.id,
+				to: nodeId,
+				label: e.extension,
+				color: '#E87A90',
+			});
+			if (e.transferTo) {
+				e.transferTo.forEach(k => {
+					const toId = !!~k.indexOf(' ')
+						? k : `${curNode.id} ${k}`;
+					edges.push({
+						unavailable,
+						from: nodeId,
+						to: toId,
+					});
+				});
+			}
+		});
+
+		/* 深すぎたら接続局を見ない */
+		if (e.depth >= maxNest)
+			continue;
+
+		mantela.providers.forEach(e => {
+			const node = nodes.get(e.identifier);
 			/* 既に知られている局の場合、呼び名を追加 */
-			if (me) {
-				me.names = [ ...new Set([ ...me.names, aboutMe.name ]) ];
-				Object.assign(me, aboutMe);
+			if (node) {
+				node.names = [ ...new Set([ ...node.names, e.name ]) ];
 			} else {
-				nodes.set(aboutMe.identifier, {
-					...aboutMe,
-					id: aboutMe.identifier,
-					names: [ aboutMe.name ],
+				/* 接続の unavailable をコピーしたくないため */
+				const v = JSON.parse(JSON.stringify(e));
+				delete v.unavailable;
+				nodes.set(e.identifier, {
+					...v,
+					id: e.identifier,
+					names: [ e.name ],
 					type: 'PBX',
 				});
 				statistics.pbxs++;
 			}
-		} else {
-			/* 自分の情報すら名乗れない局の情報は登録できない */
-			continue;
-		}
-
-		/* 訪問済 ID の場合はここでおしまい */
-		const curNode = nodes.get(mantela.aboutMe.identifier);
-		if (visited.has(curNode.id))
-			continue;
-		visited.add(curNode.id);
-		statistics.mantelas++;
-
-		/* 内線番号を登録する */
-		if ('extensions' in mantela)
-			mantela.extensions.forEach((e, i) => {
-				const nodeId = `${curNode.id} `
-						+ `${e.identifier || crypto.randomUUID()}`;
-				const node = nodes.get(nodeId);
-				const unavailable = curNode.unavailable || undefined;
-				/* 既に知られている内線の場合、呼び名を追加 */
-				if (node)
-					node.names = [ ...new Set([ ...node.names, e.name ]) ];
-				else {
-					nodes.set(nodeId, {
-						...e,
-						unavailable,
-						id: nodeId,
-						names: [ e.name ],
-						name: `${curNode.names[0]} ${e.name}`,
-					});
-					statistics.terminals++;
-				}
-				/* 番号追加 */
-				edges.push({
-					unavailable,
-					from: curNode.id,
-					to: nodeId,
-					label: e.extension,
-					color: '#E87A90',
-				});
-				if (e.transferTo) {
-					e.transferTo.forEach(k => {
-						const toId = !!~k.indexOf(' ')
-								? k : `${curNode.id} ${k}`;
-						edges.push({
-							unavailable,
-							from: nodeId,
-							to: toId,
-						});
-					});
-				}
+			/* 番号追加 */
+			edges.push({
+				from: curNode.id,
+				to: e.identifier,
+				label: e.prefix,
+				unavailable: e.unavailable,
 			});
-
-		/* 接続局を登録する（接続数を考慮する） */
-		if ('providers' in mantela && current.nest < maxNest)
-			mantela.providers.forEach(e => {
-				const node = nodes.get(e.identifier);
-				/* 既に知られている局の場合、呼び名を追加 */
-				if (node) {
-					node.names = [ ...new Set([ ...node.names, e.name ]) ];
-				} else {
-					/* 接続の unavailable をコピーしたくないため */
-					const v = JSON.parse(JSON.stringify(e));
-					delete v.unavailable;
-					nodes.set(e.identifier, {
-						...v,
-						id: e.identifier,
-						names: [ e.name ],
-						type: 'PBX',
-					});
-					statistics.pbxs++;
-				}
-				/* 番号追加 */
-				edges.push({
-					from: curNode.id,
-					to: e.identifier,
-					label: e.prefix,
-					unavailable: e.unavailable,
-				});
-				/* キュー追加 */
-				if (e.mantela)
-					queue.push({
-						url: e.mantela,
-						nest: current.nest + 1,
-					});
-			});
+		});
 	}
 
 	/**
@@ -235,10 +175,6 @@ generateGraph(firstMantela, maxNest = Infinity, elemStat = undefined, elemStatis
 		edges: edges,
 	};
 
-	/* 実行時間を計算し、ステータスに結果を反映する */
-	const executeCompletedTime = performance.now();
-	const executeLength = executeCompletedTime - executeStartedTime;
-	updateStatus(`Done.  Execution Time: ${executeLength} ms`);
 
 	/* 統計情報を表示する */
 	updateStatistics(statistics);
@@ -352,8 +288,15 @@ const showNodeInfo = node => new Promise(r => {
 formMantela.addEventListener('submit', async e => {
 	e.preventDefault();
 	btnGenerate.disabled = true;
+
+	const start = performance.now();
+	outputStatus.textContent = 'Fetching Mantelas...';
 	const limit = checkNest.checked ? +numNest.value : Infinity;
-	const graph = await generateGraph(urlMantela.value, limit, outputStatus, divStatistic);
+	const mantelas = await fetchMantelas2(urlMantela.value, limit);
+	const end = performance.now();
+	outputStatus.textContent = `Fetched ${mantelas.size} Mantelas (${end-start|0} ms)`;
+
+	const graph = mantelas2Graph(mantelas, limit, divStatistic);
 	const network = graph2vis(divMantela, graph);
 	network.on('doubleClick', async e => {
 		if (e.nodes.length > 0) {
