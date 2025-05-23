@@ -71,6 +71,17 @@ mantelas2Graph(mantelas, maxNest = Infinity, elemStatistic = undefined)
 		terminals: 0,
 	};
 
+	/* 列挙されている局をあらかじめ登録する */
+	mantelas.forEach(e => {
+		nodes.set(e.mantela.aboutMe.identifier, {
+			...e.mantela.aboutMe,
+			id: e.mantela.aboutMe.identifier,
+			names: [ e.mantela.aboutMe.name ],
+			type: 'PBX',
+		});
+		statistics.pbxs++;
+	});
+
 	for (const e of mantelas.values()) {
 		/* 深すぎたら相手にしない */
 		if (e.depth > maxNest)
@@ -78,21 +89,6 @@ mantelas2Graph(mantelas, maxNest = Infinity, elemStatistic = undefined)
 
 		/* mantela.json は取得済である */
 		const mantela = e.mantela;
-
-		/* 自分の情報を登録する */
-		const me = nodes.get(mantela.aboutMe.identifier);
-		if (me) {
-			me.names = [ ...new Set([ ...me.names, mantela.aboutMe.name ]) ];
-			Object.assign(me, mantela.aboutMe);
-		} else {
-			nodes.set(mantela.aboutMe.identifier, {
-				...mantela.aboutMe,
-				id: mantela.aboutMe.identifier,
-				names: [ mantela.aboutMe.name ],
-				type: 'PBX',
-			});
-			statistics.pbxs++;
-		}
 
 		/* 内線番号の登録 */
 		const curNode = nodes.get(mantela.aboutMe.identifier);
