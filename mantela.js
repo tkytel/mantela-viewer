@@ -277,7 +277,61 @@ const showNodeInfo = node => new Promise(r => {
 	pre.overflow = 'scroll';
 	pre.append(code);
 
-	dialog.append(pre, div);
+	const omit_key_list = [
+		'name',
+		'names',
+		'type',
+		'id',
+		'unavailable',
+		'geolocationCoordinates'
+	];
+	const replace_emoji = {
+		extension: "🔢",
+		identifier: "🆔",
+		mantela: "🗺️",
+		prefix: "#️⃣",
+		sipServer: "🖥",
+		sipUsername: "👩🏻‍💼",
+		sipPassword: "🔑",
+		sipPort: "🔌",
+		preferredPrefix: "🅿️",
+		model: "🔧",
+		transferTo: "📢"
+	}
+	const emoji = document.createElement('div');
+	const node_name = document.createElement('h1');
+	if (node.type === 'PBX') {
+		node_name.innerHTML = "🏢";
+	} else {
+		node_name.innerHTML =
+		'<img style ="height: 3vw; display: inline; margin-right: 1vw" src="img/' + node.type + '.svg"/>';
+	}
+	node_name.innerHTML += node.name;
+	const node_names = document.createElement('span');
+	if (node.names.length >= 2) {
+		node_names.textContent = "( " + node.names + " )";
+	}
+	const attributes = document.createElement('ul');
+	for(let key in node) {
+		let icon = key + " = ";
+		let item = document.createElement('li');
+		item.style.listStyle = 'none';
+		item.style.paddingLeft = 0;
+		if (omit_key_list.includes(key) || node[key].length === 0) {
+			continue;
+		}
+		if (key in replace_emoji) {
+			icon = replace_emoji[key];
+		}
+		if (key === 'mantela') {
+			item.innerHTML = icon + '<a href="' + node[key] + '">' + node[key] + '</a>';
+		} else {
+			item.innerHTML = icon + node[key];
+		}
+		attributes.append(item);
+	}
+	emoji.append(node_name, node_names, attributes);
+	dialog.append(emoji, pre, div);
 	dialog.showModal();
 });
 
