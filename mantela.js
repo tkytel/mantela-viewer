@@ -277,14 +277,16 @@ const showNodeInfo = node => new Promise(r => {
 	pre.overflow = 'scroll';
 	pre.append(code);
 
+	// 無視キーリスト ノード情報画面の<ul>リストとして取り扱わないキー
 	const omit_key_list = [
-		'name',
-		'names',
-		'type',
-		'id',
-		'unavailable',
-		'geolocationCoordinates'
+		'name',		// <h1>として表示
+		'names',	// <span>として表示
+		'type',		// <img>として表示
+		'id',		// identifier の方を処理
+		'unavailable',	// TODO
+		'geolocationCoordinates'	// TODO FIXME
 	];
+	// 絵文字置換リスト JSONキー→絵文字
 	const replace_emoji = {
 		extension: "🔢",
 		identifier: "🆔",
@@ -301,34 +303,44 @@ const showNodeInfo = node => new Promise(r => {
 	const emoji = document.createElement('div');
 	const node_name = document.createElement('h1');
 	if (node.type === 'PBX') {
+		// 局のsvgアイコンがないのでビル絵文字で代用
 		node_name.innerHTML = "🏢";
 	} else {
+		// 端末はsvgアイコンを流用
 		node_name.innerHTML =
 		'<img style ="height: 3vw; display: inline; margin-right: 1vw" src="img/' + node.type + '.svg"/>';
 	}
-	node_name.innerHTML += node.name;
+	node_name.innerHTML += node.name;	// 局名・端末名
 	const node_names = document.createElement('span');
 	if (node.names.length >= 2) {
+		// 名前を複数持つ場合のみ names: [] を表示
 		node_names.textContent = "( " + node.names + " )";
 	}
 	const attributes = document.createElement('ul');
 	for(let key in node) {
-		let icon = key + " = ";
+		// リストを組み立て
+		let icon = key + " = ";	// 絵文字置換リストにないキーは key = value として表示
 		let item = document.createElement('li');
 		item.style.listStyle = 'none';
 		item.style.paddingLeft = 0;
 		if (omit_key_list.includes(key) || node[key].length === 0) {
+			// 無視リストにあるキーの場合はリストに載せない
+			// Value が空値の場合はリストに載せない
 			continue;
 		}
 		if (key in replace_emoji) {
+			// 絵文字置換
 			icon = replace_emoji[key];
 		}
 		if (key === 'mantela') {
+			// mantela: の場合はリンク化
 			item.innerHTML = icon + '<a href="' + node[key] + '">' + node[key] + '</a>';
 		} else {
+			// それ以外はそのままリスト表示
 			item.innerHTML = icon + node[key];
 		}
 		attributes.append(item);
+		// TODO リスト表示順がmantela記載順依存で局ごとにバラつくので何とかする🙍🏻‍♀️
 	}
 	emoji.append(node_name, node_names, attributes);
 	dialog.append(emoji, pre, div);
