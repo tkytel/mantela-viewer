@@ -93,8 +93,13 @@ mantelas2Graph(mantelas, maxNest = Infinity, elemStatistic = undefined)
 		/* 内線番号の登録 */
 		const curNode = nodes.get(mantela.aboutMe.identifier);
 		mantela.extensions.forEach((e, i) => {
+			const randomId = 'randomUUID' in crypto &&
+				crypto.randomUUID() ||
+				(Math.random().toString() + Math.random().toString()).replaceAll(".", "-");
+				// crypto.randomUUID() がない環境(e.g.: http)でrandomUUID()を呼ぶと
+				// エラーで止まるので、Math.random()で強引に生成してお茶を濁す☕👩🏻‍🍳
 			const nodeId = `${curNode.id} `
-				+ `${e.identifier || crypto.randomUUID()}`;
+				+ `${e.identifier || randomId}`;
 			const node = nodes.get(nodeId);
 			const unavailable = curNode.unavailable || undefined;
 			/* 既に知られている内線の場合、呼び名を追加 */
