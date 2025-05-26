@@ -279,7 +279,7 @@ const showNodeInfo = node => new Promise(r => {
 
 	// 無視キーリスト ノード情報画面の<ul>リストとして取り扱わないキー
 	const omit_key_list = [
-		'name',		// <h1>として表示
+		'name',		// <h2>として表示
 		'names',	// <span>として表示
 		'type',		// <img>として表示
 		'id',		// identifier の方を処理
@@ -301,7 +301,7 @@ const showNodeInfo = node => new Promise(r => {
 		transferTo: "📢"
 	}
 	const emoji = document.createElement('div');
-	const node_name = document.createElement('h1');
+	const node_name = document.createElement('h2');
 	if (node.type === 'PBX') {
 		// 局のsvgアイコンがないのでビル絵文字で代用
 		node_name.innerHTML = "🏢";
