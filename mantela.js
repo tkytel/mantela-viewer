@@ -283,7 +283,7 @@ const showNodeInfo = node => new Promise(r => {
 		'names',	// <span>として表示
 		'type',		// <img>として表示
 		'id',		// identifier の方を処理
-		'unavailable',	// TODO
+		'unavailable',	// style=color: silver として処理
 		'geolocationCoordinates'	// TODO FIXME
 	];
 	// 絵文字置換リスト JSONキー→絵文字
@@ -315,6 +315,13 @@ const showNodeInfo = node => new Promise(r => {
 	if (node.names.length >= 2) {
 		// 名前を複数持つ場合のみ names: [] を表示
 		node_names.textContent = "( " + node.names + " )";
+	}
+	if (node.unavailable == 'true') {
+		// unavailable = true な局は文字の色変え
+		const unavailable_color	= 'silver';
+		dialog.style.color	= unavailable_color;
+		node_name.style.color	= unavailable_color;
+		code.style.color	= unavailable_color;
 	}
 	const attributes = document.createElement('ul');
 	for(let key in node) {
