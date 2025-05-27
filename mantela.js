@@ -24,16 +24,16 @@
  */
 
 /**
- * BASE32形式のランダムIDを生成
+ * 端末用ランダムIDを生成
  * 環境(e.g.: http)によっては crypto.randomUUID() がないので、自前関数で生成する
  * @param { length } int - 生成するIDの長さ
  */
-const randomBASE32id = (length) => {
-	const base32chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"; // この中から文字を選ぶ
+const randomTerminalId = (length) => {
+	const idChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"; // この中から文字を選ぶ
 	let id = "";
 
 	for(let i=0; i<length; i++) {
-		id += base32chars.at(Math.floor(Math.random()*32));
+		id += idChars.at(Math.floor(Math.random()*32));
 	}
 
 	return id;
@@ -109,7 +109,7 @@ mantelas2Graph(mantelas, maxNest = Infinity, elemStatistic = undefined)
 		const curNode = nodes.get(mantela.aboutMe.identifier);
 		mantela.extensions.forEach((e, i) => {
 			const nodeId = `${curNode.id} `
-				+ `${e.identifier || randomBASE32id(8)}`;
+				+ `${e.identifier || randomTerminalId(8)}`;
 			const node = nodes.get(nodeId);
 			const unavailable = curNode.unavailable || undefined;
 			/* 既に知られている内線の場合、呼び名を追加 */
