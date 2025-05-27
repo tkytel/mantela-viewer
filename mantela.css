@@ -15,3 +15,122 @@
 	position: relative;
 	background-color: rgba(64, 64, 64, 0.1);
 }
+
+/* ダブルクリック時の絵文字用クラス（for nodeName） */
+.mantela-node::before {
+	display: inline-block;
+	content: '';
+	width: 1em; height: 1em;
+	vertical-align: -10%;	/* XXX */
+	background: center / cover no-repeat url('./img/unknown.svg');
+	margin-inline-end: 1em;
+}
+.mantela-node-PBX::before {
+	/* OFFICE BUILDING Emoji */
+	content: '\1F3E2';
+	vertical-align: unset;
+	background: unset;
+}
+.mantela-node-alias::before {
+	background-image: url('./img/alias.svg');
+}
+.mantela-node-application::before {
+	background-image: url('./img/application.svg');
+}
+.mantela-node-cellphone::before {
+	background-image: url('./img/cellphone.svg');
+}
+.mantela-node-conference::before {
+	background-image: url('./img/conference.svg');
+}
+.mantela-node-dialphone::before {
+	background-image: url('./img/dialphone.svg');
+}
+.mantela-node-fax::before {
+	background-image: url('./img/fax.svg');
+}
+.mantela-node-information::before {
+	background-image: url('./img/information.svg');
+}
+.mantela-node-main::before {
+	background-image: url('./img/main.svg');
+}
+.mantela-node-modem::before {
+	background-image: url('./img/modem.svg');
+}
+.mantela-node-music::before {
+	background-image: url('./img/music.svg');
+}
+.mantela-node-other::before {
+	background-image: url('./img/other.svg');
+}
+.mantela-node-phone::before {
+	background-image: url('./img/phone.svg');
+}
+.mantela-node-pushphone::before {
+	background-image: url('./img/pushphone.svg');
+}
+.mantela-node-reserved::before {
+	background-image: url('./img/reserved.svg');
+}
+.mantela-node-smartphone::before {
+	background-image: url('./img/smartphone.svg');
+}
+.mantela-node-switchboard::before {
+	background-image: url('./img/switchboard.svg');
+}
+.mantela-node-unknown::before {
+	background-image: url('./img/unknown.svg');
+}
+.mantela-node-unused::before {
+	background-image: url('./img/unused.svg');
+}
+
+/* ダブルクリック時の絵文字用クラス（for attributes） */
+.mantela-key-extension {
+	/* INPUT NUMBERS Emoji + EM SPACE */
+	list-style: '\1F522\2003';
+}
+.mantela-key-identifier {
+	/* ID Emoji + EM SPACE */
+	list-style: '\1F194\2003';
+}
+.mantela-key-mantela {
+	/* WORLD MAP Emoji + EM SPACE */
+	list-style: '\1F5FA\2003';
+}
+.mantela-key-prefix {
+	/* HASH Emoji with colour, and key cap + EM SPACE */
+	list-style: '\0023\FE0F\20E3\2003';
+}
+.mantela-key-sipServer {
+	/* DESKTOP COMPUTER Emoji with colour + EM SPACE */
+	list-style: '\1F5A5\FE0F\2003';
+}
+.mantela-key-sipUsername {
+	/*
+	 * WOMAN OFFICE WORKER Emoji + EM SPACE;
+	 * WOMAN Emoji with FITZPATRICK TYPE-1–2, ZWJ, and BRIEFCASE Emoji
+	 */
+	list-style: '\1F469\1F3FB\200D\1F4BC\2003';
+}
+.mantela-key-sipPassword {
+	/* KEY Emoji + EM SPACE */
+	list-style: '\1f511\2003';
+}
+.mantela-key-sipPort {
+	/* ELECTRIC PLUG Emoji + EM SPACE */
+	list-style: '\1f50c\2003';
+}
+.mantela-key-preferredPrefix {
+	/* P BUTTON Emoji with colour + EM SPACE */
+	list-style: '\1f17f\FE0F\2003';
+}
+.mantela-key-model {
+	/* WRENCH Emoji with colour + EM SPACE */
+	list-style: '\1f527\2003';
+}
+.mantela-key-transferTo {
+	/* LOUDSPEAKER Emoji + EM SPACE */
+	list-style: '\1f4e2\2003';
+}
