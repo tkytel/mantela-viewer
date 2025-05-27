@@ -278,7 +278,7 @@ const showNodeInfo = node => new Promise(r => {
 	pre.append(code);
 
 	// 無視キーリスト ノード情報画面の<ul>リストとして取り扱わないキー
-	const omit_key_list = [
+	const omitKeyList = [
 		'name',		// <h2>として表示
 		'names',	// <span>として表示
 		'type',		// <img>として表示
@@ -287,7 +287,7 @@ const showNodeInfo = node => new Promise(r => {
 		'geolocationCoordinates'	// TODO FIXME
 	];
 	// 絵文字置換リスト JSONキー→絵文字
-	const replace_emoji = {
+	const replaceEmoji = {
 		extension: "🔢",
 		identifier: "🆔",
 		mantela: "🗺️",
@@ -301,26 +301,26 @@ const showNodeInfo = node => new Promise(r => {
 		transferTo: "📢"
 	}
 	const emoji = document.createElement('div');
-	const node_name = document.createElement('h2');
+	const nodeName = document.createElement('h2');
 	if (node.type === 'PBX') {
 		// 局のsvgアイコンがないのでビル絵文字で代用
-		node_name.innerHTML = "🏢";
+		nodeName.innerHTML = "🏢";
 	} else {
 		// 端末はsvgアイコンを流用
-		node_name.innerHTML =
+		nodeName.innerHTML =
 		'<img style ="height: 3vw; display: inline; margin-right: 1vw" src="img/' + node.type + '.svg"/>';
 	}
-	node_name.innerHTML += node.name;	// 局名・端末名
-	const node_names = document.createElement('span');
+	nodeName.innerHTML += node.name;	// 局名・端末名
+	const nodeNames = document.createElement('span');
 	if (node.names.length >= 2) {
 		// 名前を複数持つ場合のみ names: [] を表示
-		node_names.textContent = "( " + node.names + " )";
+		nodeNames.textContent = "( " + node.names + " )";
 	}
 	if (node.unavailable == 'true') {
 		// unavailable = true な局は文字の色変え
 		const unavailable_color	= 'silver';
 		dialog.style.color	= unavailable_color;
-		node_name.style.color	= unavailable_color;
+		nodeName.style.color	= unavailable_color;
 		code.style.color	= unavailable_color;
 	}
 	const attributes = document.createElement('ul');
@@ -330,14 +330,14 @@ const showNodeInfo = node => new Promise(r => {
 		let item = document.createElement('li');
 		item.style.listStyle = 'none';
 		item.style.paddingLeft = 0;
-		if (omit_key_list.includes(key) || node[key].length === 0) {
+		if (omitKeyList.includes(key) || node[key].length === 0) {
 			// 無視リストにあるキーの場合はリストに載せない
 			// Value が空値の場合はリストに載せない
 			continue;
 		}
-		if (key in replace_emoji) {
+		if (key in replaceEmoji) {
 			// 絵文字置換
-			icon = replace_emoji[key];
+			icon = replaceEmoji[key];
 		}
 		if (key === 'mantela') {
 			// mantela: の場合はリンク化
@@ -349,7 +349,7 @@ const showNodeInfo = node => new Promise(r => {
 		attributes.append(item);
 		// TODO リスト表示順がmantela記載順依存で局ごとにバラつくので何とかする🙍🏻‍♀️
 	}
-	emoji.append(node_name, node_names, attributes);
+	emoji.append(nodeName, nodeNames, attributes);
 	dialog.append(emoji, pre, div);
 	dialog.showModal();
 });
