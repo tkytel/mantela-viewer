@@ -349,7 +349,7 @@ const showNodeInfo = node => new Promise(r => {
 	/* node の名前の見え方も CSS で定義 */
 	nodeName.classList.add('mantela-node', `mantela-node-${node.type}`);
 	nodeName.textContent = node.name;	/* 局名・端末名 */
-	if (node.unavailable == 'true') {
+	if (node.unavailable) {
 		/* unavailable = true な局は文字の色変え */
 		const unavailable_color	= 'silver';
 		dialog.style.color	= unavailable_color;
