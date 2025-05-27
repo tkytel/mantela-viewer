@@ -282,7 +282,7 @@ const showNodeInfo = node => new Promise(r => {
 	const details = document.createElement('details');
 	details.append(summary, pre);
 
-	// 無視キーリスト ノード情報画面の<ul>リストとして取り扱わないキー
+	/* 無視キーリスト ノード情報画面の<ul>リストとして取り扱わないキー */
 	const omitKeyList = [
 		'name',		// <h2>として表示
 		'names',	// <span>として表示
@@ -291,7 +291,8 @@ const showNodeInfo = node => new Promise(r => {
 		'unavailable',	// style=color: silver として処理
 		'geolocationCoordinates'	// TODO FIXME
 	];
-	// 絵文字置換リスト JSONキー→絵文字
+
+	/* 絵文字置換リスト JSONキー→絵文字 */
 	const replaceEmoji = {
 		extension: "🔢",
 		identifier: "🆔",
@@ -307,21 +308,21 @@ const showNodeInfo = node => new Promise(r => {
 	}
 	const nodeName = document.createElement('h2');
 	if (node.type === 'PBX') {
-		// 局のsvgアイコンがないのでビル絵文字で代用
+		/* 局のsvgアイコンがないのでビル絵文字で代用 */
 		nodeName.innerHTML = "🏢";
 	} else {
-		// 端末はsvgアイコンを流用
+		/* 端末はsvgアイコンを流用 */
 		nodeName.innerHTML =
 		'<img style ="height: 3vw; display: inline; margin-right: 1vw" src="img/' + node.type + '.svg"/>';
 	}
-	nodeName.innerHTML += node.name;	// 局名・端末名
+	nodeName.innerHTML += node.name;	/* 局名・端末名 */
 	const nodeNames = document.createElement('span');
 	if (node.names.length >= 2) {
-		// 名前を複数持つ場合のみ names: [] を表示
+		/* 名前を複数持つ場合のみ names: [] を表示 */
 		nodeNames.textContent = "( " + node.names + " )";
 	}
 	if (node.unavailable == 'true') {
-		// unavailable = true な局は文字の色変え
+		/* unavailable = true な局は文字の色変え */
 		const unavailable_color	= 'silver';
 		dialog.style.color	= unavailable_color;
 		nodeName.style.color	= unavailable_color;
@@ -329,29 +330,31 @@ const showNodeInfo = node => new Promise(r => {
 	}
 	const attributes = document.createElement('ul');
 	for(let key in node) {
-		// リストを組み立て
-		let icon = key + " = ";	// 絵文字置換リストにないキーは key = value として表示
+		/* リストを組み立て */
+		let icon = key + " = ";	/* 絵文字置換リストにないキーは key = value として表示 */
 		let item = document.createElement('li');
 		item.style.listStyle = 'none';
 		item.style.paddingLeft = 0;
 		if (omitKeyList.includes(key) || node[key].length === 0) {
-			// 無視リストにあるキーの場合はリストに載せない
-			// Value が空値の場合はリストに載せない
+			/*
+			 * 無視リストにあるキーの場合はリストに載せない
+			 * Value が空値の場合はリストに載せない
+			 */
 			continue;
 		}
 		if (key in replaceEmoji) {
-			// 絵文字置換
+			/* 絵文字置換 */
 			icon = replaceEmoji[key];
 		}
 		if (key === 'mantela') {
-			// mantela: の場合はリンク化
+			/* mantela: の場合はリンク化 */
 			item.innerHTML = icon + '<a href="' + node[key] + '">' + node[key] + '</a>';
 		} else {
-			// それ以外はそのままリスト表示
+			/* それ以外はそのままリスト表示 */
 			item.innerHTML = icon + node[key];
 		}
 		attributes.append(item);
-		// TODO リスト表示順がmantela記載順依存で局ごとにバラつくので何とかする🙍🏻‍♀️
+		/* TODO リスト表示順がmantela記載順依存で局ごとにバラつくので何とかする🙍🏻‍♀️ */
 	}
 
 	const section = document.createElement('section');
