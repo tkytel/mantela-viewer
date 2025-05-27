@@ -23,6 +23,21 @@
  * @property { Edge[] } edges - Edge の列
  */
 
+/**
+ * 端末用ランダムIDを生成
+ * 環境(e.g.: http)によっては crypto.randomUUID() がないので、自前関数で生成する
+ * @param { length } int - 生成するIDの長さ
+ */
+const randomTerminalId = (length) => {
+	const idChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"; // この中から文字を選ぶ
+	let id = "";
+
+	for(let i=0; i<length; i++) {
+		id += idChars.at(Math.floor(Math.random()*32));
+	}
+
+	return id;
+}
 
 /**
  */
@@ -94,7 +109,7 @@ mantelas2Graph(mantelas, maxNest = Infinity, elemStatistic = undefined)
 		const curNode = nodes.get(mantela.aboutMe.identifier);
 		mantela.extensions.forEach((e, i) => {
 			const nodeId = `${curNode.id} `
-				+ `${e.identifier || crypto.randomUUID()}`;
+				+ `${e.identifier || randomTerminalId(8)}`;
 			const node = nodes.get(nodeId);
 			const unavailable = curNode.unavailable || undefined;
 			/* 既に知られている内線の場合、呼び名を追加 */
