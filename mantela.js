@@ -288,7 +288,79 @@ const showNodeInfo = node => new Promise(r => {
 	pre.overflow = 'scroll';
 	pre.append(code);
 
-	dialog.append(pre, div);
+	const summary = document.createElement('summary');
+	summary.textContent = '全ての情報を表示……';
+	const details = document.createElement('details');
+	details.append(summary, pre);
+
+	/*
+	 * 絵文字置換リスト（JSONキー）（表示は CSS で定義）
+	 * この順番に表示される
+	 */
+	const replaceKeys = [
+		'extension',
+		'identifier',
+		'mantela',
+		'prefix',
+		'sipServer',
+		'sipUsername',
+		'sipPassword',
+		'sipPort',
+		'preferredPrefix',
+		'model',
+		'transferTo',
+	];
+	const attributes = document.createElement('ul');
+	replaceKeys.forEach(k => {
+		/* node がそのようなキーを持っていなければ何もしない */
+		if (!node[k])
+			return;
+
+		/* キーに対応する li を作る */
+		const item = document.createElement('li');
+		const defaultPreProc = (item, value) => item.textContent = value;
+		const preProcs = {
+			mantela: (item, value) => {
+				const a = document.createElement('a');
+				a.rel = 'external';
+				a.href = encodeURI(value);
+				a.textContent = value;
+				item.append(a);
+			},
+			preferredPrefix: (item, value) => {
+				if (Array.isArray(value))
+					item.textContent = value.join(', ');
+				else
+					item.textContent = value;
+			},
+		};
+		(preProcs[k] || defaultPreProc)(item, node[k]);
+		item.classList.add(`mantela-key-${k}`);
+		attributes.append(item);
+	});
+
+	const nodeNames = document.createElement('span');
+	if (node.names.length >= 2) {
+		/* 名前を複数持つ場合のみ names: [] を表示 */
+		nodeNames.textContent = `(a.k.a.: ${node.names.join(', ')})`;
+	}
+
+	const nodeName = document.createElement('h2');
+	/* node の名前の見え方も CSS で定義 */
+	nodeName.classList.add('mantela-node', `mantela-node-${node.type}`);
+	nodeName.textContent = node.name;	/* 局名・端末名 */
+	if (node.unavailable == 'true') {
+		/* unavailable = true な局は文字の色変え */
+		const unavailable_color	= 'silver';
+		dialog.style.color	= unavailable_color;
+		nodeName.style.color	= unavailable_color;
+		code.style.color	= unavailable_color;
+	}
+
+	const section = document.createElement('section');
+	section.append(nodeName, nodeNames, attributes, details);
+
+	dialog.append(section, div);
 	dialog.showModal();
 });
 
