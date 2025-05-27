@@ -277,6 +277,11 @@ const showNodeInfo = node => new Promise(r => {
 	pre.overflow = 'scroll';
 	pre.append(code);
 
+	const summary = document.createElement('summary');
+	summary.textContent = '全ての情報を表示……';
+	const details = document.createElement('details');
+	details.append(summary, pre);
+
 	// 無視キーリスト ノード情報画面の<ul>リストとして取り扱わないキー
 	const omitKeyList = [
 		'name',		// <h2>として表示
@@ -350,7 +355,7 @@ const showNodeInfo = node => new Promise(r => {
 	}
 
 	const section = document.createElement('section');
-	section.append(nodeName, nodeNames, attributes, pre);
+	section.append(nodeName, nodeNames, attributes, details);
 
 	dialog.append(section, div);
 	dialog.showModal();
