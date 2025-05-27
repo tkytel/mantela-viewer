@@ -300,7 +300,6 @@ const showNodeInfo = node => new Promise(r => {
 		model: "🔧",
 		transferTo: "📢"
 	}
-	const emoji = document.createElement('div');
 	const nodeName = document.createElement('h2');
 	if (node.type === 'PBX') {
 		// 局のsvgアイコンがないのでビル絵文字で代用
@@ -349,8 +348,11 @@ const showNodeInfo = node => new Promise(r => {
 		attributes.append(item);
 		// TODO リスト表示順がmantela記載順依存で局ごとにバラつくので何とかする🙍🏻‍♀️
 	}
-	emoji.append(nodeName, nodeNames, attributes);
-	dialog.append(emoji, pre, div);
+
+	const section = document.createElement('section');
+	section.append(nodeName, nodeNames, attributes, pre);
+
+	dialog.append(section, div);
 	dialog.showModal();
 });
 
