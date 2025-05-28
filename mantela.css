@@ -33,6 +33,20 @@
 	z-index: 100;
 	background-color: rgba(212, 209, 209, 0.861);
 }
+@media screen and (max-width: 768px) {
+	.overlay {
+		width: 100%;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		position: fixed;
+		padding: 10px 20px;
+		display: block;
+	}
+	.wrapper {
+		overflow: visible;
+	}
+}
 
 /* ダブルクリック時の絵文字用クラス（for nodeName） */
 .mantela-node::before {
