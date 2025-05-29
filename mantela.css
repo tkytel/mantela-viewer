@@ -33,7 +33,8 @@
 }
 @media screen and (max-width: 768px) {
 	.overlay {
-		width: 100%;
+		left: 0;
+		right: 0;
 		bottom: 0;
 		position: sticky;
 		padding: 10px 20px;
