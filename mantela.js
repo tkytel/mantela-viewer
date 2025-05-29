@@ -252,11 +252,14 @@ graph2vis(container, graph)
 			arrows: 'to',
 		},
 		layout: {
+			randomSeed: 0xDEADBEEF,
 			improvedLayout: false,
 		},
 		physics: {
 			solver: 'forceAtlas2Based',
 		},
+		width: '400%',
+		height: '400%',
 	};
 
 	return new vis.Network(container, data, options);
@@ -459,6 +462,9 @@ formMantela.addEventListener('submit', async e => {
 	});
 	network.on('stabilizationIterationsDone', _ => {
 		divMantelaCover.style.display = 'none';
+	});
+	network.on('stabilized', async e => {
+		console.log('stabilized!');
 	});
 	secMandala.scrollIntoView({
 		behavior: 'smooth',
