@@ -13,8 +13,7 @@
 	overflow: hidden;
 	position: relative;
 	flex-grow: 1;
-	margin-left: calc(-50vw + 50%);
-  	margin-right: calc(-50vw + 50%);
+	margin-inline: calc(-50vw + 50%);
 }
 .mantela {
 	margin: auto;
