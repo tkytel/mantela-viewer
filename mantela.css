@@ -36,12 +36,12 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		position: fixed;
+		position: absolute;
 		padding: 10px 20px;
 		display: none;
 	}
 	.wrapper {
-		overflow: unset;
+		position: relative;
 	}
 }
 
