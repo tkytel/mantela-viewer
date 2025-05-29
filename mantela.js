@@ -42,14 +42,14 @@ const randomTerminalId = (length) => {
 /**
  */
 function
-mantelas2Graph(mantelas, maxNest = Infinity, elemStatistic = undefined)
+mantelas2Graph(mantelas, maxNest = Infinity, elemStatistics = undefined)
 {
 	/**
 	 * 統計情報の更新（指定されていれば）
 	 * @param { object }
 	 */
 	function updateStatistics(s) {
-		if (!elemStatistic)
+		if (!elemStatistics)
 			return;
 
 		const liMantela = document.createElement('li');
@@ -61,8 +61,8 @@ mantelas2Graph(mantelas, maxNest = Infinity, elemStatistic = undefined)
 		const ul = document.createElement('ul');
 		ul.append(liMantela, liPbx, liTerminals);
 
-		const clone = elemStatistic.cloneNode(false);
-		elemStatistic.parentElement.replaceChild(clone, elemStatistic);
+		const clone = elemStatistics.cloneNode(false);
+		elemStatistics.parentElement.replaceChild(clone, elemStatistics);
 		clone.append(ul);
 	}
 
@@ -379,7 +379,9 @@ formMantela.addEventListener('submit', async e => {
 	const end = performance.now();
 	outputStatus.textContent = `Fetched ${mantelas.size} Mantelas (${end-start|0} ms)`;
 
-	const graph = mantelas2Graph(mantelas, limit, divStatistic);
+	const graph = mantelas2Graph(mantelas, limit, divStatistics);
+	divOverlay.style.display = 'block';
+
 	const network = graph2vis(divMantela, graph);
 	network.on('doubleClick', async e => {
 		if (e.nodes.length > 0) {
