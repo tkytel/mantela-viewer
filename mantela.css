@@ -27,8 +27,7 @@
 	position: absolute;
 	bottom: 50px;
 	right: 50px;
-	padding-left: 20px;
-	padding-right: 40px;
+	padding-inline: 20px;
 	z-index: 100;
 	background-color: rgba(212, 209, 209, 0.861);
 }
