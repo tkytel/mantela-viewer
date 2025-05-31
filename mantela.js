@@ -375,9 +375,40 @@ formMantela.addEventListener('submit', async e => {
 	const start = performance.now();
 	outputStatus.textContent = 'Fetching Mantelas...';
 	const limit = checkNest.checked ? +numNest.value : Infinity;
-	const mantelas = await fetchMantelas2(urlMantela.value, limit);
+	const { mantelas, errors } = await fetchMantelas3(urlMantela.value, {
+		maxDepth: limit,
+	});
 	const end = performance.now();
 	outputStatus.textContent = `Fetched ${mantelas.size} Mantelas (${end-start|0} ms)`;
+
+	const cloneError = outputError.cloneNode(false);
+	outputError.parentNode.replaceChild(cloneError, outputError);
+	errors.forEach(e => {
+		const dt = document.createElement('dt');
+		dt.textContent = e.message;
+
+		const ddNameMesg = document.createElement('dd');
+		ddNameMesg.textContent = {
+			TypeError: /* may be thrown by fetch() */
+				'Mantela.json の取得に失敗した可能性があります'
+				+ '（CORS の設定や HTTP ヘッダを確認してみてください）',
+			Error: /* may be thrown if status code is not OK */
+				'Mantela.json の取得に失敗した可能性があります'
+				+ '（正しい URL であるか確認してみてください）',
+			SyntaxError: /* may be thrown by res.json() */
+				'Mantela.json の解釈に失敗した可能性があります'
+				+ '（書式に問題がないか確認してみてください）',
+			AbortError: /* may be thrown by AbortController */
+				'Mantela.json の取得がタイムアウトしました'
+				+ '（ネットワークの状態を確認してみてください）',
+		}[e.cause.name] || '不明なエラーです';
+
+		const ddCause = document.createElement('dd');
+		ddCause.textContent = String(e.cause);
+
+		cloneError.append(dt, ddNameMesg, ddCause);
+	});
+	summaryError.textContent = `エラー情報（${errors.length} 件）`;
 
 	const graph = mantelas2Graph(mantelas, limit, divStatistics);
 	divOverlay.style.display = 'block';
