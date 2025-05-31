@@ -382,7 +382,7 @@ formMantela.addEventListener('submit', async e => {
 	if (checkTimeout.checked)
 		Object.assign(options, { fetchTimeoutMs: +numTimeout.value });
 	
-	const { mantelas, _ } = await fetchMantelas3(urlMantela.value, options);
+	const { mantelas } = await fetchMantelas3(urlMantela.value, options);
 	
 	const end = performance.now();
 	outputStatus.textContent = `Fetched ${mantelas.size} Mantelas (${end-start|0} ms)`;
