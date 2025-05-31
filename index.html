@@ -47,6 +47,14 @@ VoIP 電話網の起点となる Mantela を指定してください。
 <label for="numNest">最大ホップ数:</label>
 <input type="number" id="numNest" min="0" step="1" class="fill-inline">
 </div>
+<div>
+<label for="checkNest">Mantela を取得することに費やす時間を制限する (1 局あたり):</label>
+<input type="checkbox" id="checkTimeout">
+</div>
+<div>
+<label for="numTimeout">制限時間 (ミリ秒):</label>
+<input type="number" id="numTimeout" min="0" step="1" max="2147483647" class="fill-inline">
+</div>
 <hr>
 <div>
 <input type="submit" id="btnGenerate" value="Mantela を生成..." class="fill-inline">
