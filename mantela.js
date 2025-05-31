@@ -374,16 +374,15 @@ formMantela.addEventListener('submit', async e => {
 
 	const start = performance.now();
 	outputStatus.textContent = 'Fetching Mantelas...';
-	const limit = checkNest.checked ? +numNest.value : Infinity;
 
+	const limit = checkNest.checked ? +numNest.value : Infinity;
 	const options = {};
 	if (checkNest.checked)
-		Object.assign(options, { maxDepth: +numNest.value });
+		Object.assign(options, { maxDepth: limit });
 	if (checkTimeout.checked)
 		Object.assign(options, { fetchTimeoutMs: +numTimeout.value });
-	
-	const { mantelas } = await fetchMantelas3(urlMantela.value, options);
-	
+	const { mantelas, errors } = await fetchMantelas3(urlMantela.value, options);
+
 	const end = performance.now();
 	outputStatus.textContent = `Fetched ${mantelas.size} Mantelas (${end-start|0} ms)`;
 
