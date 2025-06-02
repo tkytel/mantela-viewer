@@ -339,6 +339,25 @@ const showNodeInfo = node => new Promise(r => {
 		attributes.append(item);
 	});
 
+	const iframe = document.createElement('iframe');
+	iframe.classList.add('mantela-image');
+	iframe.style.display = node.image ? 'block' : 'none';
+	iframe.setAttribute('sandbox', '');
+	iframe.srcdoc = `<!DOCTYPE html>
+	<html>
+	<head>
+	<meta charset="utf-8">
+	<title>Image</title>
+	<style>
+	body { margin: 0; padding: 0; overflow: hidden; }
+	img { display: block; margin: auto; max-width: 100vw; max-height: 100vh; }
+	</style>
+	</head>
+	<body>
+	<img id="image" src="${encodeURI(node.image)}" loading="lazy">
+	</body>
+	</html>`;
+
 	const nodeNames = document.createElement('span');
 	if (node.names.length >= 2) {
 		/* 名前を複数持つ場合のみ names: [] を表示 */
@@ -358,7 +377,7 @@ const showNodeInfo = node => new Promise(r => {
 	}
 
 	const section = document.createElement('section');
-	section.append(nodeName, nodeNames, attributes, details);
+	section.append(nodeName, nodeNames, iframe, attributes, details);
 
 	dialog.append(section, div);
 	dialog.showModal();

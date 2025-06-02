@@ -45,6 +45,13 @@
 	}
 }
 
+.mantela-image {
+	width: 100%;
+	height: auto;
+	aspect-ratio: 4 / 3;
+	border: none;
+}
+
 /* ダブルクリック時の絵文字用クラス（for nodeName） */
 .mantela-node::before {
 	display: inline-block;
