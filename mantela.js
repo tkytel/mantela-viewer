@@ -271,6 +271,14 @@ const showNodeInfo = node => new Promise(r => {
 		dialog.parentNode.removeChild(dialog);
 		r(dialog.returnValue);
 	});
+	dialog.addEventListener('click', e => {
+		const r = dialog.getBoundingClientRect();
+		const xInside = r.left < e.clientX && e.clientX < r.right;
+		const yInside = r.top < e.clientY && e.clientY < r.bottom;
+		/* ダイアローグの外側をクリックしていたらキャンセルで閉じる */
+		if (!xInside || !yInside)
+			dialog.requestClose(false);
+	});
 	document.body.append(dialog);
 
 	const button = document.createElement('button');
