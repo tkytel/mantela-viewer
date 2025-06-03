@@ -7,9 +7,8 @@
 	display: flex;
 	flex-direction: column;
 }
-.wrapper {
+.container .wrapper {
 	width: 100vw;
-	height: 100vh;
 	overflow: hidden;
 	position: relative;
 	flex-grow: 1;
