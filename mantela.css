@@ -7,6 +7,15 @@
 	display: flex;
 	flex-direction: column;
 }
+@supports (-webkit-touch-callout: none) {
+	/*
+	 * As '-webkit-touch-callout' is only supported by Safari on iOS,
+	 * these only apply to Safari on iOS.
+	 */
+	.container {
+		max-height: -webkit-fill-available;
+	}
+}
 .container .wrapper {
 	width: 100vw;
 	overflow: hidden;
