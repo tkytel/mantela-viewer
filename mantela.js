@@ -452,6 +452,14 @@ formMantela.addEventListener('submit', async e => {
 			await showNodeInfo(node);
 		}
 	});
+	network.on('stabilizationProgress', _ => {
+		divMantelaCover.style.display = 'grid';
+		const dots = [...coverMessage.textContent].filter(c => c === '.').length;
+		coverMessage.textContent = 'Drawing Mantela' + '.'.repeat((dots+1) % 4);
+	});
+	network.on('stabilizationIterationsDone', _ => {
+		divMantelaCover.style.display = 'none';
+	});
 	secMandala.scrollIntoView({
 		behavior: 'smooth',
 		block: 'start',

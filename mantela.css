@@ -51,6 +51,15 @@
 		position: relative;
 	}
 }
+.cover {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: none;	/* or grid; */
+	place-items: center;
+}
 
 .mantela-image {
 	width: 100%;
