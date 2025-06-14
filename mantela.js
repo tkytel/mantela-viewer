@@ -358,11 +358,11 @@ const showNodeInfo = node => new Promise(r => {
 	<title>Image</title>
 	<style>
 	body { margin: 0; padding: 0; overflow: hidden; }
-	img { display: block; margin: auto; max-width: 100vw; max-height: 100vh; }
+	object { display: block; margin: auto; max-width: 100vw; max-height: 100vh; }
 	</style>
 	</head>
 	<body>
-	<img id="image" src="${encodeURI(node.image)}" loading="lazy">
+	<object id="image" data="${encodeURI(node.image)}" loading="lazy"></object>
 	</body>
 	</html>`;
 
