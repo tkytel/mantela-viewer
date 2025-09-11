@@ -401,6 +401,8 @@ formMantela.addEventListener('submit', async e => {
 		Object.assign(options, { maxDepth: limit });
 	if (checkTimeout.checked)
 		Object.assign(options, { fetchTimeoutMs: +numTimeout.value });
+	if (checkNoCache.checked)
+		Object.assign(options, { cache: 'no-cache' });
 	const { mantelas, errors } = await fetchMantelas3(urlMantela.value, options);
 
 	const end = performance.now();
