@@ -111,7 +111,7 @@ mantelas2Graph(mantelas, maxNest = Infinity, elemStatistics = undefined)
 			const nodeId = `${curNode.id} `
 				+ `${e.identifier || randomTerminalId(8)}`;
 			const node = nodes.get(nodeId);
-			const unavailable = curNode.unavailable || undefined;
+			const unavailable = curNode.unavailable || e.unavailable || undefined;
 			/* 既に知られている内線の場合、呼び名を追加 */
 			if (node)
 				node.names = [ ...new Set([ ...node.names, e.name ]) ];
