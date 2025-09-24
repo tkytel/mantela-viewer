@@ -27,7 +27,7 @@
 	margin: auto;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(64, 64, 64, 0.1);
+	background-color: var(--background-alt);
 	z-index: 10;
 }
 .overlay {
@@ -36,7 +36,10 @@
 	bottom: 50px;
 	right: 50px;
 	padding-inline: 20px;
-	background-color: rgba(212, 209, 209, 0.861);
+	background-color: var(--background-alt);
+	opacity: 0.861;
+	border: solid var(--border);
+	border-radius: 10px;
 }
 @media screen and (max-width: 768px) {
 	.overlay {

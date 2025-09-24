@@ -198,7 +198,7 @@ mantelas2Graph(mantelas, maxNest = Infinity, elemStatistics = undefined)
  * @param { HTMLElement } container - 可視化結果を格納する要素
  * @param { Graph } graph - 接続情報
  */
-function
+async function
 graph2vis(container, graph)
 {
 	const imgtab = {
@@ -221,12 +221,29 @@ graph2vis(container, graph)
 		unknown: './img/unknown.svg',
 		unused: './img/unused.svg',
 	};
+	const isDarkMode = matchMedia('(prefers-color-scheme: dark)').matches;
+	const blobUrls = {};	/* XXX */
+	for (const key of Object.keys(imgtab)) {
+		const txt = await fetch(imgtab[key])
+					.then(res => res.text());
+
+		const par = new DOMParser();
+		const doc = par.parseFromString(txt, 'image/svg+xml');
+		const svg = doc.documentElement;
+		if (svg.tagName.toLowerCase() !== 'svg')
+			throw new Error(`${imgtab[key]} does not contain an SVG element.`);
+		svg.setAttribute('fill', isDarkMode ? '#dbdbdb' : '#363636');
+
+		const ser = new XMLSerializer();
+		const str = ser.serializeToString(svg);
+		blobUrls[key] = URL.createObjectURL(new Blob([ str ], { type: 'image/svg+xml' }));
+	}
 	const nodes = graph.nodes.map(e => ({
 		id: e.id,
 		label: e.names[0],
 		color: e.type !== 'PBX' && 'orange',
 		shape: e.type === 'PBX' ? 'circle' : 'image',
-		image: imgtab[e.type] || imgtab['unknown'],
+		image: blobUrls[e.type] || blobUrls['unknown'],
 		opacity: e.unavailable ? 0.3 : 1,
 	}));
 	const edges = graph.edges.map(e => {
@@ -440,7 +457,7 @@ formMantela.addEventListener('submit', async e => {
 	const graph = mantelas2Graph(mantelas, limit, divStatistics);
 	divOverlay.style.display = 'block';
 
-	const network = graph2vis(divMantela, graph);
+	const network = await graph2vis(divMantela, graph);
 	network.on('doubleClick', async e => {
 		if (e.nodes.length > 0) {
 			const node = graph.nodes.find(v => v.id === e.nodes[0]);
